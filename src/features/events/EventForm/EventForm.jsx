@@ -1,8 +1,26 @@
 import React, { Component } from 'react';
 import { Segment, Form, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { createEvent, updateEvent } from '../eventActions';
+import cuid from 'cuid';
+
+const mapState = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
+
+  let event = { title: '', date: '', city: '', venue: '', hostedBy: '' };
+  if (eventId && state.events.length > 0) {
+    event = state.events.filter(event => event.id === eventId)[0];
+  }
+  return { event };
+};
+
+const actions = {
+  createEvent,
+  updateEvent
+};
 
 class EventForm extends Component {
-  state = { title: '', date: '', city: '', venue: '', hostedBy: '' };
+  state = { ...this.props.event };
 
   componentDidMount() {
     if (this.props.selectedEvent !== null) {
@@ -14,8 +32,15 @@ class EventForm extends Component {
     evt.preventDefault();
     if (this.state.id) {
       this.props.updateEvent(this.state);
+      this.props.history.push(`/events/${this.state.id}`);
     } else {
-      this.props.createEvent(this.state);
+      const newEvent = {
+        ...this.state,
+        id: cuid(),
+        hostPhotoURL: '/assets/user.png'
+      };
+      this.props.createEvent(newEvent);
+      this.props.history.push(`/events/${newEvent.id}`);
     }
   };
 
@@ -24,7 +49,6 @@ class EventForm extends Component {
   };
 
   render() {
-    const { cancelFormOpen } = this.props;
     const { title, date, city, venue, hostedBy } = this.state;
     return (
       <Segment>
@@ -32,53 +56,53 @@ class EventForm extends Component {
           <Form.Field>
             <label>Event Title</label>
             <input
-              name="title"
+              name='title'
               value={title}
               onChange={this.handleInputChange}
-              placeholder="Event Title"
+              placeholder='Event Title'
             />
           </Form.Field>
           <Form.Field>
             <label>Event Date</label>
             <input
-              name="date"
+              name='date'
               value={date}
               onChange={this.handleInputChange}
-              type="date"
-              placeholder="Event Date"
+              type='date'
+              placeholder='Event Date'
             />
           </Form.Field>
           <Form.Field>
             <label>City</label>
             <input
-              name="city"
+              name='city'
               value={city}
               onChange={this.handleInputChange}
-              placeholder="City event is taking place"
+              placeholder='City event is taking place'
             />
           </Form.Field>
           <Form.Field>
             <label>Venue</label>
             <input
-              name="venue"
+              name='venue'
               value={venue}
               onChange={this.handleInputChange}
-              placeholder="Enter the Venue of the event"
+              placeholder='Enter the Venue of the event'
             />
           </Form.Field>
           <Form.Field>
             <label>Hosted By</label>
             <input
-              name="hostedBy"
+              name='hostedBy'
               value={hostedBy}
               onChange={this.handleInputChange}
-              placeholder="Enter the name of person hosting"
+              placeholder='Enter the name of person hosting'
             />
           </Form.Field>
-          <Button positive type="submit">
+          <Button positive type='submit'>
             Submit
           </Button>
-          <Button onClick={cancelFormOpen} type="button">
+          <Button onClick={this.props.history.goBack} type='button'>
             Cancel
           </Button>
         </Form>
@@ -86,4 +110,4 @@ class EventForm extends Component {
     );
   }
 }
-export default EventForm;
+export default connect(mapState, actions)(EventForm);
