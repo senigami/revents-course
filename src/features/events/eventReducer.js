@@ -17,14 +17,14 @@ const initialState = [
       {
         id: 'a',
         name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
+        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
       },
       {
         id: 'b',
         name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
-      }
-    ]
+        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
+      },
+    ],
   },
   {
     id: '2',
@@ -41,15 +41,15 @@ const initialState = [
       {
         id: 'b',
         name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
+        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
       },
       {
         id: 'a',
         name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-      }
-    ]
-  }
+        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
+      },
+    ],
+  },
 ];
 
 const createEvent = (state, payload) => {
@@ -58,17 +58,17 @@ const createEvent = (state, payload) => {
 
 const updateEvent = (state, payload) => {
   return [
-    ...state.filter(event => event.id !== payload.event.id),
-    payload.event
+    ...state.filter((event) => event.id !== payload.event.id),
+    payload.event,
   ];
 };
 
 const deleteEvent = (state, payload) => {
-  return [...state.filter(event => event.id !== payload.eventId)];
+  return [...state.filter((event) => event.id !== payload.eventId)];
 };
 
 export default createReducer(initialState, {
   [CREATE_EVENT]: createEvent,
   [UPDATE_EVENT]: updateEvent,
-  [DELETE_EVENT]: deleteEvent
+  [DELETE_EVENT]: deleteEvent,
 });
